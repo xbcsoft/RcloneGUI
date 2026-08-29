@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html window-frame="transparent">
+
+<head>
+    <meta charset="UTF-8">
+    <title>rcloneGUI - Sciter UI</title>
+    <link rel="stylesheet" href="css/metro.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/metro.js"></script>
+    <script src="js/index.js"></script>
+</head>
+
+<body>
+    <!-- Titlebar -->
+    <div id="titlebar">
+        <div class="titlebar-drag-region" role="window-caption">
+            <div class="brand-logo-group">
+                <img src="app-icon.png" class="brand-app-icon" alt="rcloneGUI" />
+                <span class="brand-title" data-i18n="app_title">rcloneGUI</span>
+            </div>
+        </div>
+
+        <div class="titlebar-actions">
+            <div class="title-action-btn btn-upgrade" id="btnUpgrade" title="Upgrade" data-i18n-title="btn_upgrade" style="display:none;">
+                <svg class="title-action-icon" viewBox="0 0 24 24">
+                    <path fill="#ff4081" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span data-i18n="btn_upgrade">升级</span>
+            </div>
+
+            <div class="title-action-btn btn-add" id="btnAdd" onclick="openNewDrivePanel()" title="Add Drive" data-i18n-title="btn_add">
+                <svg class="title-action-icon" viewBox="0 0 24 24">
+                    <path fill="#80deea" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                <span data-i18n="btn_add">添加</span>
+            </div>
+
+            <div class="title-action-btn" id="btnSettings" onclick="slideIn('viewSettings')" title="Settings" data-i18n-title="btn_settings">
+                <svg class="title-action-icon" viewBox="0 0 24 24">
+                    <path fill="#ffffff" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6 3.6z"/>
+                </svg>
+                <span data-i18n="btn_settings">设置</span>
+            </div>
+        </div>
+
+        <!-- Window Controls -->
+        <div class="titlebar-controls">
+            <div class="title-btn" role="window-minimize">—</div>
+            <div class="title-btn btn-close" role="window-close">✕</div>
+        </div>
+    </div>
+
+    <!-- Content Workspace -->
+    <div id="contentwin">
+        <div class="empty-state-wrap" id="emptyStateWrap">
+            <svg class="chalk-arrow" viewBox="0 0 24 24">
+                <path fill="#ffffff" d="M12 4l-8 8h5v8h6v-8h5z" transform="rotate(45 12 12)"/>
+            </svg>
+            <div class="chalk-text" data-i18n="here_we_go">HERE WE GO~</div>
+            <div class="empty-subtext" data-i18n="empty_hint">点击右上角 '+ 添加' 挂载你的首个网络驱动器</div>
+        </div>
+
+        <div class="drive-list" id="driveListContainer" style="display:none;"></div>
+    </div>
+
+    <!-- ROOT LEVEL FLYOUT DRAWERS -->
+    <div class="metro-flyout-drawer" id="viewNewDrive">
+        <div class="page-header-row">
+            <div class="btn-round-back" id="btnBackNewDrive" onclick="slideOut('viewNewDrive')" title="Back">
+                <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#ffffff" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </div>
+            <div class="page-title" data-i18n="new_drive">新建驱动器</div>
+        </div>
+
+        <div class="form-row storage-cat-row">
+            <div class="cat-label" data-i18n="storage">存储</div>
+            <div class="cat-tabs-list">
+                <!-- NAS Tab in 1st position (Active) -->
+                <div class="cat-tab active">
+                    <svg class="cat-icon" viewBox="0 0 24 24"><path fill="#ffffff" d="M4 1h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 7h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-4c0-1.1.9-2 2-2zm0 7h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-4c0-1.1.9-2 2-2z"/></svg>
+                    <span data-i18n="nas">NAS</span>
+                </div>
+                <div class="cat-tab disabled">
+                    <svg class="cat-icon" viewBox="0 0 24 24"><path fill="#888888" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                    <span data-i18n="google">Google</span>
+                </div>
+                <div class="cat-tab disabled">
+                    <svg class="cat-icon" viewBox="0 0 24 24"><path fill="#888888" d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/></svg>
+                    <span data-i18n="microsoft">Microsoft</span>
+                </div>
+                <div class="cat-tab disabled">
+                    <svg class="cat-icon" viewBox="0 0 24 24"><path fill="#888888" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                    <span data-i18n="cloud">Cloud</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Protocol Selection Box (WebDAV / SFTP / FTP) -->
+        <div class="protocol-box">
+            <div class="protocol-card" data-protocol="WebDAV" onclick="selectProtocol('WebDAV')">
+                <svg class="protocol-card-icon" viewBox="0 0 24 24">
+                    <path fill="#ffffff" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+                <span data-i18n="webdav">WebDAV</span>
+            </div>
+
+            <div class="protocol-card" data-protocol="SFTP" onclick="selectProtocol('SFTP')">
+                <svg class="protocol-card-icon" viewBox="0 0 24 24">
+                    <path fill="#ffffff" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                </svg>
+                <span data-i18n="sftp">SFTP</span>
+            </div>
+
+            <div class="protocol-card active" data-protocol="FTP" onclick="selectProtocol('FTP')">
+                <svg class="protocol-card-icon" viewBox="0 0 24 24">
+                    <path fill="#ffffff" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+                <span data-i18n="ftp">FTP</span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label" data-i18n="drive_label">驱动器</div>
+            <div class="metro-select" id="driveLetterSelect" style="width:70px; margin-right:8px;">
+                <span class="caption" id="driveLetterVal">Auto</span><span class="select-arrow">▼</span>
+                <popup class="metro-select-popup" id="driveLetterPopup">
+                    <div class="option-item" data-value="Auto">Auto</div>
+                    <div class="option-item" data-value="Z:">Z:</div>
+                    <div class="option-item" data-value="Y:">Y:</div>
+                    <div class="option-item" data-value="X:">X:</div>
+                    <div class="option-item" data-value="W:">W:</div>
+                    <div class="option-item" data-value="V:">V:</div>
+                    <div class="option-item" data-value="U:">U:</div>
+                    <div class="option-item" data-value="T:">T:</div>
+                    <div class="option-item" data-value="S:">S:</div>
+                    <div class="option-item" data-value="R:">R:</div>
+                    <div class="option-item" data-value="Q:">Q:</div>
+                    <div class="option-item" data-value="P:">P:</div>
+                    <div class="option-item" data-value="O:">O:</div>
+                    <div class="option-item" data-value="N:">N:</div>
+                    <div class="option-item" data-value="M:">M:</div>
+                    <div class="option-item" data-value="L:">L:</div>
+                    <div class="option-item" data-value="K:">K:</div>
+                    <div class="option-item" data-value="J:">J:</div>
+                    <div class="option-item" data-value="I:">I:</div>
+                    <div class="option-item" data-value="H:">H:</div>
+                    <div class="option-item" data-value="G:">G:</div>
+                    <div class="option-item" data-value="F:">F:</div>
+                    <div class="option-item" data-value="E:">E:</div>
+                    <div class="option-item" data-value="D:">D:</div>
+                </popup>
+            </div>
+            <div class="input-with-clear metro-input-shell" data-text-input-shell>
+                <input type="text" class="metro-text-input" id="inputDriveName" value="FTP" style="width:1*;">
+                <div class="btn-clear-input">✕</div>
+            </div>
+        </div>
+
+        <!-- Strict MahApps.Metro (.gui-check) Checkboxes Grid -->
+        <div class="options-grid">
+            <div class="options-col">
+                <label class="gui-check">
+                    <input type="checkbox" id="chkReconnect" checked>
+                    <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                    <svg class="chk-inline-icon" viewBox="0 0 24 24"><path fill="#00acc1" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                    <span data-i18n="reconnect_at_signin">登录时重新连接</span>
+                </label>
+
+                <label class="gui-check">
+                    <input type="checkbox" id="chkLocalDisk">
+                    <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                    <svg class="chk-inline-icon" viewBox="0 0 24 24"><path fill="#8bc34a" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-1c-1.1 0-2-.9-2-2v-1c0-1.1.9-2 2-2h3v-1h-4V9h2V8h2v1c1.1 0 2 .9 2 2v1c0 1.1-.9 2-2 2h-3v1h4v2h-2v1z"/></svg>
+                    <span data-i18n="local_disk">本地磁盘</span>
+                </label>
+            </div>
+
+            <div class="options-col">
+                <label class="gui-check">
+                    <input type="checkbox" id="chkReadOnly">
+                    <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                    <svg class="chk-inline-icon" viewBox="0 0 24 24"><path fill="#888888" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    <span data-i18n="read_only">只读</span>
+                </label>
+                <label class="gui-check" id="rowFileLock" style="display:none;">
+                    <input type="checkbox" id="chkFileLock">
+                    <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                    <svg class="chk-inline-icon" viewBox="0 0 24 24"><path fill="#8bc34a" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    <span data-i18n="file_lock">文件锁定</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label" data-i18n="address">地址</div>
+            <label class="gui-check" style="margin-right:6px;">
+                <input type="checkbox" id="chkSSL" onchange="onSSLChange(this)">
+                <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                <svg class="chk-inline-icon" viewBox="0 0 24 24"><path fill="#00acc1" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            </label>
+            <span id="lblProtocol" style="font-size:12px; color:#888888; margin-right:4px;">ftp://</span>
+            <div class="metro-input-shell" data-text-input-shell style="width:1*; margin-right:4px;">
+                <input type="text" class="metro-text-input" id="inputHost" value="" placeholder="host.example.com" data-i18n-ph="ph_host">
+            </div>
+            <span style="font-size:13px; color:#888888; margin-right:4px;">:</span>
+            <div class="metro-input-shell" data-text-input-shell style="width:52px;">
+                <input type="text" class="metro-text-input" id="inputPort" value="">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label"></div>
+            <div class="input-with-clear metro-input-shell" data-text-input-shell>
+                <input type="text" class="metro-text-input" id="inputPath" placeholder="路径 (例如: /dav)" data-i18n-ph="ph_path" style="width:1*;">
+                <div class="btn-clear-input">✕</div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-label" data-i18n="account">账户</div>
+            <div class="metro-input-shell" data-text-input-shell style="width:1*; margin-right:8px;">
+                <input type="text" class="metro-text-input" id="inputUsername" value="" placeholder="用户名" data-i18n-ph="ph_username">
+            </div>
+            <div class="metro-input-shell" data-text-input-shell style="width:1*; margin-right:12px;">
+                <input type="password" class="metro-text-input" id="inputPassword" value="" placeholder="密码" data-i18n-ph="ph_password">
+            </div>
+            <label class="gui-check">
+                <input type="checkbox" id="chkAnonymous" onchange="onAnonymousChange(this)">
+                <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                <span data-i18n="anonymous">匿名</span>
+            </label>
+        </div>
+
+        <!-- SFTP Private Key Selection Row -->
+        <div class="form-row" id="rowPrivateKey" style="display:none;">
+            <div class="form-label" data-i18n="private_key">私钥</div>
+            <div class="input-with-clear metro-input-shell" data-text-input-shell style="width:1*; margin-right:6px;">
+                <input type="text" class="metro-text-input" id="inputPrivateKey" placeholder="可选择私钥文件 (you may select private key file)" data-i18n-ph="ph_private_key" style="width:1*;">
+                <div class="btn-clear-input">✕</div>
+            </div>
+            <div class="btn-browse-file" id="btnBrowsePrivateKey" title="Browse Private Key">
+                <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#ffffff" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            </div>
+        </div>
+
+        <!-- SFTP & FTP Charset Selector Row -->
+        <div class="form-row" id="rowCharset" style="display:flex;">
+            <div class="form-label" data-i18n="charset">字符集</div>
+            <div class="metro-select" id="charsetSelect" style="width:120px; margin-right:8px;">
+                <span class="caption" id="charsetVal">utf-8</span><span class="select-arrow">▼</span>
+                <popup class="metro-select-popup" id="charsetPopup">
+                    <div class="option-item" data-value="utf-8">utf-8</div>
+                    <div class="option-item" data-value="gbk">gbk</div>
+                    <div class="option-item" data-value="gb2312">gb2312</div>
+                    <div class="option-item" data-value="gb18030">gb18030</div>
+                    <div class="option-item" data-value="big5">big5</div>
+                    <div class="option-item" data-value="shift_jis">shift_jis</div>
+                    <div class="option-item" data-value="euc-kr">euc-kr</div>
+                    <div class="option-item" data-value="windows-1252">windows-1252</div>
+                </popup>
+            </div>
+            <span style="font-size:11px; color:#888888;">Unicode (UTF-8), 65001/1200</span>
+        </div>
+
+        <!-- FTP Mode & Encryption Options Row -->
+        <div class="form-row" id="rowFtpOptions" style="display:flex;">
+            <div class="form-label" data-i18n="transfer_mode">传输模式</div>
+            <label class="gui-check" style="margin-right:14px;">
+                <input type="checkbox" id="chkPassive" checked>
+                <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                <span data-i18n="passive">被动模式 (Passive)</span>
+            </label>
+            <label class="gui-check" style="margin-left:10px;">
+                <input type="checkbox" id="chkExplicit" checked>
+                <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                <span data-i18n="explicit">显式加密 (Explicit)</span>
+            </label>
+        </div>
+
+        <div class="bottom-btn-bar">
+            <div class="btn-metro-action btn-primary-ok" id="btnOkNewDrive" data-i18n="btn_ok">确定</div>
+            <div class="btn-metro-action btn-secondary-cancel" id="btnCancelNewDrive" data-i18n="btn_cancel">取消</div>
+        </div>
+    </div>
+
+    <!-- VIEW 3: Settings -->
+    <div class="metro-flyout-drawer" id="viewSettings">
+        <div class="page-header-row">
+            <div class="btn-round-back" id="btnBackSettings" onclick="slideOut('viewSettings')" title="Back">
+                <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#222222" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </div>
+            <div class="page-title" data-i18n="settings_title">设置</div>
+        </div>
+
+        <div class="settings-group-row">
+            <div class="settings-label" data-i18n="general">常规</div>
+            <div class="settings-content">
+                <div class="settings-input-group" style="flow: horizontal; border-spacing: 16px;">
+                    <div class="gui-check" id="lblAutoStartGUI">
+                        <input type="radio" name="autoStartMode" id="radioAutoStartGUI" value="gui">
+                        <span class="gui-radio-box"><span class="gui-radio-dot"></span></span>
+                        <span data-i18n="autostart_gui">开机自启(带GUI)</span>
+                    </div>
+                    <div class="gui-check" id="lblAutoStartNoGUI">
+                        <input type="radio" name="autoStartMode" id="radioAutoStartNoGUI" value="nogui">
+                        <span class="gui-radio-box"><span class="gui-radio-dot"></span></span>
+                        <span data-i18n="autostart_nogui">开机自启(无GUI)</span>
+                    </div>
+                </div>
+                <label class="gui-check">
+                    <input type="checkbox" id="chkOpenExplorer">
+                    <span class="gui-check-box"><span class="gui-check-mark"></span></span>
+                    <span data-i18n="open_explorer">驱动器连接后打开文件资源管理器</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-group-row">
+            <div class="settings-label" data-i18n="sys_service">系统服务</div>
+            <div class="settings-content">
+                <div class="settings-input-group">
+                    <div class="settings-btn-action btn-text-action" id="btnInstallService" data-i18n="btn_install_service">安装</div>
+                    <div class="settings-btn-action btn-text-action" id="btnUninstallService" data-i18n="btn_uninstall_service">卸载</div>
+                    <span style="font-size:12px; color:#555555;" id="lblServiceStatus" data-i18n="service_status_not_installed">未安装系统服务</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-group-row">
+            <div class="settings-label" data-i18n="language">语言</div>
+            <div class="settings-content">
+                <div class="settings-input-group">
+                    <select id="selLanguage">
+                        <option value="zh">简体中文 (Chinese)</option>
+                        <option value="en">English</option>
+                    </select>
+                    <div class="settings-btn-action" title="Refresh" onclick="refreshLanguages()">🔄</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-group-row">
+            <div class="settings-label" data-i18n="temporary">临时文件夹</div>
+            <div class="settings-content">
+                <div class="settings-input-group">
+                    <div class="metro-input-shell" data-text-input-shell style="width:1*;">
+                        <input type="text" class="settings-text-input" id="inputCachePath" value="C:\ProgramData\rcloneGUI\Cache">
+                    </div>
+                    <div class="settings-btn-action" id="btnBrowseCachePath" title="Browse Cache Folder">📁</div>
+                    <div class="settings-btn-action btn-text-action" onclick="document.getElementById('inputCachePath').value='C:\\ProgramData\\rcloneGUI\\Cache'" data-i18n="btn_default">默认</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-group-row" style="display:none;">
+            <div class="settings-label" data-i18n="update">检查更新</div>
+            <div class="settings-content">
+                <div class="settings-input-group">
+                    <div class="settings-btn-action btn-text-action" id="btnCheckUpdate" data-i18n="btn_check">检查</div>
+                    <span style="font-size:12px; color:#555555;" id="lblUpdateStatus" data-i18n="update_status">当前已是最新版本 (v1.70.3)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-footer">
+            <div class="footer-logo-block">
+                <div class="brand-logo-group">
+                    <img src="app-icon.png" class="brand-app-icon" alt="rcloneGUI" />
+                    <span class="brand-title" style="color:#222222; font-size:18px;">rcloneGUI</span>
+                </div>
+            </div>
+            <div class="footer-info-block">
+                <div style="font-weight:600; color:#333333;" data-i18n="edition_info">rcloneGUI 标准版</div>
+                <div><span data-i18n="gui_version_label">GUI版本:</span><span id="lblGuiVersion"></span>, <span data-i18n="core_version_label">内核版本:</span><span id="lblCoreVersion"></span></div>
+                <div data-i18n="copyright_info">白易 © 小白菜软件. 保留GUI所有权利</div>
+                <div style="color:#888888; font-size:10px; margin-top:2px;" data-i18n="third_party_info">rclone © Nick Craig-Wood · UI 引擎由 Sciter © Terra Informatica Software, Inc. 提供</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popups -->
+    <popup id="popupDriveLetter" class="gui-popup-menu"></popup>
+
+    <popup id="popupLanguage" class="gui-popup-menu gui-popup-menu-light">
+        <div class="gui-popup-item" onclick="chooseLanguage('zh')">简体中文 (Chinese)</div>
+        <div class="gui-popup-item" onclick="chooseLanguage('en')">English</div>
+    </popup>
+
+    <!-- 右键快捷上下文菜单 (Context Menu) -->
+    <popup id="textContextMenu" class="metro-context-menu">
+        <div class="context-command-item" data-command="undo"><span>撤消</span><span class="context-shortcut">Ctrl+Z</span></div>
+        <div class="context-menu-separator"></div>
+        <div class="context-command-item" data-command="cut"><span>剪切</span><span class="context-shortcut">Ctrl+X</span></div>
+        <div class="context-command-item" data-command="copy"><span>复制</span><span class="context-shortcut">Ctrl+C</span></div>
+        <div class="context-command-item" data-command="paste"><span>粘贴</span><span class="context-shortcut">Ctrl+V</span></div>
+        <div class="context-command-item" data-command="delete"><span>删除</span><span class="context-shortcut">Del</span></div>
+        <div class="context-menu-separator"></div>
+        <div class="context-command-item" data-command="select-all"><span>全选</span><span class="context-shortcut">Ctrl+A</span></div>
+    </popup>
+
+    <!-- 模态对话框遮罩层与消息框 (MahApps.Metro 风格) -->
+    <div class="metro-dialog-overlay" id="appErrorModal">
+        <div class="metro-dialog-box">
+            <div class="dialog-title" id="appErrorModalTitle">连接错误提示</div>
+            <div class="dialog-body" id="appErrorModalBody">
+                网络驱动器挂载失败，请检查远程服务器地址、账号密码及网络连接。
+            </div>
+            <div class="dialog-actions">
+                <button class="metro-btn metro-btn-accent" id="btnAppErrorModalOk" onclick="closeAppErrorModal()">确认关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认删除对话框 (MahApps.Metro 风格) -->
+    <div class="metro-dialog-overlay" id="confirmDeleteModal">
+        <div class="metro-dialog-box">
+            <div class="dialog-title" id="confirmDeleteModalTitle">删除确认</div>
+            <div class="dialog-body" id="confirmDeleteModalBody">
+                确定要删除这个网络驱动器配置吗？
+            </div>
+            <div class="dialog-actions" style="content-horizontal-align: center; border-spacing: 20px;">
+                <button class="metro-btn metro-btn-accent" id="btnConfirmDeleteOk" style="margin: 0; min-width: 88px;">确定</button>
+                <button class="metro-btn" id="btnConfirmDeleteCancel" style="margin: 0; min-width: 88px; background:#555555; border:1px solid #777777;">取消</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

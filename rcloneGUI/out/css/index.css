@@ -1,0 +1,1492 @@
+/* ==========================================================================
+   rcloneGUI - Custom Theme & Layout Extensions on top of MahApps.Metro
+   ========================================================================== */
+
+:root {
+    --accent-color: #0082a6;
+    --accent-hover: #0097c2;
+    --accent-glow: rgba(0, 130, 166, 0.35);
+}
+
+/* Root & Global Window Styles */
+html {
+    background: transparent;
+    font-family: "Segoe UI", "Microsoft YaHei", "微软雅黑", sans-serif;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+body {
+    margin: 10px;
+    /* Original 10px window margin restored */
+    overflow: hidden;
+    background: #202020;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.45);
+    position: relative;
+}
+
+html[window-active] body {
+    box-shadow: inset 0 0 0 1px rgba(0, 130, 166, 0.5), 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Titlebar Override for RaiDrive Signature Cyan Theme (32px Height) */
+#titlebar {
+    height: 32px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    background: #0082a6;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    user-select: none;
+}
+
+.titlebar-drag-region {
+    width: 1*;
+    height: 100%;
+    flow: horizontal;
+    content-vertical-align: middle;
+    padding-left: 10px;
+}
+
+.brand-logo-group {
+    flow: horizontal;
+    content-vertical-align: middle;
+    cursor: default;
+}
+
+.brand-app-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    display: inline-block;
+    image-rendering: optimize-quality;
+}
+
+.footer-logo-block .brand-app-icon {
+    width: 26px;
+    height: 26px;
+    margin-right: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    image-rendering: optimize-quality;
+}
+
+.brand-icon-grid {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    position: relative;
+}
+
+.brand-sq {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+}
+
+.sq-green-1 {
+    left: 0;
+    top: 0;
+    background: #689f38;
+}
+
+.sq-green-2 {
+    left: 0;
+    top: 9px;
+    background: #8bc34a;
+}
+
+.sq-blue-1 {
+    left: 9px;
+    top: 0;
+    background: #00acc1;
+}
+
+.sq-blue-2 {
+    left: 9px;
+    top: 9px;
+    background: #0082a6;
+}
+
+.brand-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+/* Titlebar Action Buttons - Cursor Default */
+.titlebar-actions {
+    height: 100%;
+    flow: horizontal;
+    content-vertical-align: middle;
+}
+
+.title-action-btn {
+    behavior: clickable;
+    height: 100%;
+    padding: 0 10px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: default;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background-color 0.15s ease;
+}
+
+.title-action-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.title-action-btn:active {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.title-action-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 4px;
+    content-vertical-align: middle;
+}
+
+.btn-upgrade {
+    color: #ff80ab;
+    font-weight: 600;
+}
+
+.btn-add {
+    font-weight: 600;
+}
+
+.titlebar-controls {
+    height: 100%;
+    flow: horizontal;
+    content-vertical-align: middle;
+}
+
+.title-btn {
+    behavior: clickable;
+    width: 36px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: default;
+    transition: background-color 0.15s ease;
+}
+
+.title-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.title-btn.btn-close:hover {
+    background: #e81123;
+    color: #ffffff;
+}
+
+/* Visibility utility — hides element in Sciter layout flow */
+.ui-hidden {
+    display: none;
+}
+
+/* App Content Area */
+#contentwin {
+    width: 1*;
+    height: 1*;
+    background: #202020;
+    flow: vertical;
+    position: relative;
+    overflow-y: auto;
+    vertical-scrollbar: metro-scrollbar;
+}
+
+.empty-state-wrap {
+    width: 1*;
+    height: 1*;
+    flow: vertical;
+    content-horizontal-align: center;
+    content-vertical-align: top;
+    padding-top: 48px;
+}
+
+.chalk-arrow {
+    width: 44px;
+    height: 44px;
+    opacity: 0.55;
+    margin: 0 auto 12px auto;
+}
+
+.chalk-text {
+    width: 100%;
+    font-size: 28px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.45);
+    font-style: italic;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 12px;
+    white-space: nowrap;
+}
+
+.empty-subtext {
+    width: 100%;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.35);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* RaiDrive Mounted Drive Item Card Styles (Pixel-perfect replica) */
+.drive-list {
+    width: *;
+    flow: vertical;
+    padding: 6px 5px 0 5px;
+    border-spacing: 6px;
+}
+
+.drive-card {
+    width: *;
+    padding: 8px 12px;
+    background: #252525;
+    border: 1px solid #363636;
+    flow: horizontal;
+    content-vertical-align: middle;
+    border-spacing: 12px;
+    cursor: default;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.drive-card:hover {
+    background: #2b2b2b;
+    border: 1px solid #888888;
+    box-shadow: none;
+}
+
+.drive-card.disconnected:not(.error) .drive-card-left-icon,
+.drive-card.disconnected:not(.error) .drive-card-info {
+    opacity: 0.55;
+}
+
+.drive-card-left-icon {
+    width: 36px;
+    height: 36px;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+}
+
+.drive-card-info {
+    width: 1*;
+    flow: vertical;
+}
+
+.drive-card-title {
+    font-size: 13px;
+    font-weight: normal;
+    font-style: italic;
+    color: #b0b0b0;
+    margin-bottom: 4px;
+}
+
+.drive-card.connected .drive-card-title,
+.drive-card.connected .drive-space-text {
+    color: #ffffff;
+}
+
+.drive-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #3a3a3a;
+    border-radius: 1px;
+    margin-bottom: 4px;
+    overflow: hidden;
+}
+
+.drive-progress-fill {
+    height: 100%;
+    background: #0082a6;
+}
+
+.drive-card-sub-row {
+    width: 100%;
+    flow: horizontal;
+    content-vertical-align: middle;
+}
+
+.drive-space-text {
+    width: 1*;
+    font-size: 11px;
+    font-style: italic;
+    color: #777777;
+}
+
+.drive-space-text.text-error,
+.drive-card.error .drive-space-text {
+    color: #ff4d4f;
+    font-style: normal;
+}
+
+.drive-sub-icons {
+    flow: horizontal;
+    content-vertical-align: middle;
+}
+
+.drive-card-actions {
+    flow: horizontal;
+    border-spacing: 8px;
+    content-vertical-align: middle;
+}
+
+.btn-drive-circle {
+    behavior: clickable;
+    width: 34px;
+    height: 34px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    cursor: default;
+    transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.btn-drive-circle.is-connecting {
+    cursor: wait;
+}
+
+.spinner-rotator {
+    transform-origin: 17px 17px;
+}
+
+.btn-drive-circle svg {
+    width: 34px;
+    height: 34px;
+    display: block;
+    pointer-events: none;
+}
+
+.btn-drive-circle * {
+    pointer-events: none;
+}
+
+.btn-drive-circle:hover circle.circle-bg {
+    fill: transparent;
+}
+
+.btn-drive-circle:active circle.circle-bg {
+    fill: transparent;
+}
+
+/* Sciter does not consistently apply :hover to SVG descendants.
+   Keep the exact two-state feedback on the clickable circle itself. */
+.btn-drive-circle:hover {
+    background: transparent;
+}
+
+.btn-drive-circle:active {
+    background: transparent;
+}
+
+/* JS state classes are used because Sciter may not emit CSS pseudo states
+   for clickable divs consistently. */
+.btn-drive-circle.is-hover {
+    background: transparent;
+}
+
+.btn-drive-circle.is-active {
+    background: transparent;
+}
+
+.btn-drive-circle:hover circle.circle-stop {
+    fill: #e0e0e0;
+    stroke: #e0e0e0;
+}
+
+.btn-drive-circle:active circle.circle-stop {
+    fill: #cccccc;
+    stroke: #cccccc;
+}
+
+.icon-stop-sq {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #181818;
+}
+
+.icon-play-triangle {
+    font-size: 13px;
+    color: #ffffff;
+    line-height: 1;
+    margin-left: 2px;
+}
+
+/* MahApps.Metro Flyout Overlay Panels (Light Theme) */
+.metro-flyout-drawer {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    right: -409px;
+    top: 32px;
+    /* Aligned with 32px titlebar height */
+    bottom: 0;
+    width: 409px;
+    /* Covers main viewport (559 - 150) */
+    height: *;
+    visibility: visible;
+    background: #ffffff;
+    color: #222222;
+    padding: 12px 16px;
+    z-index: 90;
+    flow: vertical;
+    transition: right 0.28s cubic-bezier(0.1, 0.9, 0.2, 1);
+    overflow-y: auto;
+    vertical-scrollbar: metro-scrollbar;
+    border-left: 1px solid #e0e0e0;
+}
+
+.metro-flyout-drawer.active {
+    right: 0;
+}
+
+/* New Drive Specific Compact Form Layout */
+.page-header-row {
+    width: 100%;
+    flow: horizontal;
+    content-vertical-align: middle;
+    margin-bottom: 8px;
+}
+
+.btn-round-back {
+    behavior: clickable;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    background: #f0f0f0;
+    border: 1px solid #cccccc;
+    color: #222222;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    cursor: default;
+    margin-right: 12px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-round-back path {
+    fill: #222222;
+}
+
+.btn-round-back:hover {
+    background: #0082a6;
+    border-color: #0082a6;
+    color: #ffffff;
+}
+
+.btn-round-back:hover path {
+    fill: #ffffff !important;
+}
+
+.page-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #222222;
+}
+
+.storage-cat-row {
+    width: 100%;
+    flow: horizontal;
+    content-vertical-align: bottom;
+    margin-bottom: 0;
+}
+
+.cat-label {
+    width: 54px;
+    min-width: 54px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #444444;
+    padding-bottom: 4px;
+}
+
+.cat-tabs-list {
+    width: 1*;
+    flow: horizontal;
+    border-spacing: 4px;
+    content-vertical-align: bottom;
+}
+
+.cat-tab {
+    behavior: clickable;
+    padding: 5px 12px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    font-size: 12px;
+    color: #666666;
+    cursor: default;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.cat-tab path {
+    fill: #666666;
+}
+
+.cat-tab.disabled {
+    opacity: 0.5;
+}
+
+.cat-tab.active {
+    background: #ffffff;
+    color: #0082a6;
+    font-weight: 700;
+    border: 1px solid #cccccc;
+    border-bottom: 1px solid #ffffff;
+    margin-bottom: -1px;
+    z-index: 2;
+}
+
+.cat-tab.active path {
+    fill: #0082a6 !important;
+}
+
+.cat-icon {
+    width: 13px;
+    height: 13px;
+    margin-right: 5px;
+}
+
+.protocol-box {
+    width: 100%;
+    background: #f7f7f7;
+    border: 1px solid #cccccc;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    flow: horizontal;
+    border-spacing: 8px;
+}
+
+.protocol-card {
+    behavior: clickable;
+    width: 1*;
+    height: 30px;
+    padding: 0 8px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #444444;
+    cursor: default;
+    font-size: 12px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.protocol-card path {
+    fill: #555555;
+}
+
+.protocol-card:hover {
+    background: #e5f3f8 !important;
+    background-color: #e5f3f8 !important;
+    color: #0082a6 !important;
+}
+
+.protocol-card:hover path {
+    fill: #0082a6 !important;
+}
+
+.protocol-card.active {
+    background: #0082a6 !important;
+    background-color: #0082a6 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.protocol-card.active path {
+    fill: #ffffff !important;
+}
+
+.protocol-card-icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 6px;
+}
+
+.btn-browse-file {
+    behavior: clickable;
+    width: 26px;
+    height: 26px;
+    background: #f0f0f0;
+    border: 1px solid #cccccc;
+    color: #222222;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    cursor: default;
+    border-radius: 1px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-browse-file path {
+    fill: #555555;
+}
+
+.btn-browse-file:hover {
+    background: #0082a6;
+    border-color: #0082a6;
+}
+
+.btn-browse-file:hover path {
+    fill: #ffffff !important;
+}
+
+.btn-browse-file:active {
+    background: #005b7f !important;
+    border-color: #005b7f !important;
+    color: #ffffff !important;
+}
+
+.form-row {
+    width: 100%;
+    flow: horizontal;
+    content-vertical-align: middle;
+    margin-bottom: 6px;
+    overflow: visible;
+}
+
+.form-label {
+    width: 54px;
+    min-width: 54px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333333;
+    white-space: nowrap;
+}
+
+/* Metro Custom Select Dropdown & Popup Menu */
+.metro-select {
+    box-sizing: border-box;
+    behavior: clickable;
+    position: relative;
+    height: 26px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    padding: 0 8px;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #222222 !important;
+    border: 1px solid #cccccc;
+    cursor: default;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    z-index: 100;
+}
+
+.metro-select:hover,
+.metro-select:focus,
+.metro-select:active,
+.metro-select.open,
+.metro-select:focus-within {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #222222 !important;
+    border-color: #0082a6 !important;
+}
+
+.metro-select.open {
+    z-index: 2000;
+}
+
+.metro-select .caption,
+.metro-select:hover .caption,
+.metro-select:focus .caption,
+.metro-select.open .caption {
+    display: block;
+    width: 1*;
+    min-width: 0;
+    height: 100%;
+    line-height: 28px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #222222 !important;
+}
+
+.select-arrow {
+    display: block;
+    width: 12px;
+    min-width: 12px;
+    height: 100%;
+    line-height: 28px;
+    margin-left: 4px;
+    color: #0082a6 !important;
+    font-size: 10px;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    transition: color .10s ease, transform .10s ease;
+}
+
+.metro-select:hover .select-arrow,
+.metro-select:focus .select-arrow,
+.metro-select.open .select-arrow {
+    color: #0082a6 !important;
+}
+
+.metro-select.open .select-arrow {
+    transform: rotate(180deg);
+}
+
+.metro-select-popup {
+    box-sizing: border-box;
+    width: max-content;
+    max-height: 200px;
+    overflow-y: auto;
+    vertical-scrollbar: metro-scrollbar;
+    padding: 4px;
+    flow: vertical;
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.metro-select-popup .option-item {
+    min-height: 24px;
+    padding: 0 10px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    color: #222222 !important;
+    background: transparent;
+    white-space: nowrap;
+    cursor: default;
+    font-size: 12px;
+    transition: background-color 0.10s ease-out, color 0.10s ease-out;
+}
+
+.metro-select-popup .option-item.hot {
+    background: #0082a6 !important;
+    color: #ffffff !important;
+}
+
+.metro-select-popup .option-item:active {
+    background: #00637f !important;
+    color: #ffffff !important;
+}
+
+.gui-dropdown-caret {
+    font-size: 8px;
+    color: #666666 !important;
+    margin-left: 4px;
+}
+
+/* Metro Input Shell inside flyout drawers & settings */
+.metro-flyout-drawer .metro-input-shell {
+    box-sizing: border-box;
+    width: 1*;
+    min-width: 0;
+    height: 26px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    padding: 0 6px;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 0;
+    cursor: text;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metro-flyout-drawer .metro-input-shell:hover {
+    border-color: #0082a6 !important;
+    box-shadow: 0 0 0 2px var(--accent-glow, rgba(0, 130, 166, .35));
+}
+
+.metro-flyout-drawer .metro-input-shell:focus-within,
+.metro-flyout-drawer .metro-input-shell[input-focused],
+.metro-flyout-drawer .metro-input-shell[text-menu-open] {
+    border-color: #0082a6 !important;
+    box-shadow: 0 0 0 2px var(--accent-glow, rgba(0, 130, 166, .35));
+}
+
+.metro-flyout-drawer .metro-input-shell>input[type="text"],
+.metro-flyout-drawer .metro-input-shell>input[type="password"],
+.metro-flyout-drawer .metro-input-shell>.metro-text-input {
+    box-sizing: border-box;
+    width: 1*;
+    min-width: 0;
+    height: 24px;
+    padding: 1px 0 0 0 !important;
+    content-vertical-align: middle;
+    color: #000000 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: text;
+    transition: none;
+    font-size: 12px;
+}
+
+.metro-flyout-drawer .metro-input-shell>input[type="text"]:focus,
+.metro-flyout-drawer .metro-input-shell>input[type="password"]:focus,
+.metro-flyout-drawer .metro-input-shell>.metro-text-input:focus {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.input-with-clear.metro-input-shell {
+    position: relative;
+    padding-right: 24px;
+}
+
+.metro-input-shell.has-red-border,
+.metro-input-shell:has(.has-red-border) {
+    border-color: #b71c1c !important;
+}
+
+.settings-input-group .metro-input-shell {
+    box-sizing: border-box;
+    width: 1*;
+    min-width: 0;
+    height: 28px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    padding: 0 6px;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 0;
+    cursor: text;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.settings-input-group .metro-input-shell:hover,
+.settings-input-group .metro-input-shell:focus-within,
+.settings-input-group .metro-input-shell[input-focused],
+.settings-input-group .metro-input-shell[text-menu-open] {
+    border-color: #0082a6 !important;
+    box-shadow: 0 0 0 2px var(--accent-glow, rgba(0, 130, 166, .35));
+}
+
+.settings-input-group .metro-input-shell>input.settings-text-input {
+    box-sizing: border-box;
+    width: 1*;
+    min-width: 0;
+    height: 26px;
+    padding: 0 !important;
+    content-vertical-align: middle;
+    color: #222222 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: text;
+    transition: none;
+    font-size: 13px;
+}
+
+.settings-input-group .metro-input-shell>input.settings-text-input:focus {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+input.metro-text-input,
+.metro-text-input,
+.metro-flyout-drawer input[type="text"],
+.metro-flyout-drawer input[type="password"] {
+    height: 26px;
+    padding: 0 6px;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #000000 !important;
+    caret-color: #000000 !important;
+    caret-background: #000000 !important;
+    caret: #000000 !important;
+    text-selection-caret-color: #000000 !important;
+    font-size: 12px;
+    content-vertical-align: middle;
+}
+
+input.metro-text-input:focus,
+.metro-text-input:focus,
+.metro-flyout-drawer input[type="text"]:focus,
+.metro-flyout-drawer input[type="password"]:focus {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border-color: #0082a6 !important;
+    color: #000000 !important;
+    caret-color: #000000 !important;
+    caret-background: #000000 !important;
+    caret: #000000 !important;
+    text-selection-caret-color: #000000 !important;
+    outline: none;
+}
+
+[sciter-selection-caret-hidden],
+input[sciter-selection-caret-hidden],
+textarea[sciter-selection-caret-hidden],
+.metro-text-input[sciter-selection-caret-hidden],
+input[type="text"][sciter-selection-caret-hidden],
+input[type="password"][sciter-selection-caret-hidden],
+input[type="text"][sciter-selection-caret-hidden]:focus,
+input[type="password"][sciter-selection-caret-hidden]:focus,
+.metro-text-input[sciter-selection-caret-hidden]:focus,
+.metro-flyout-drawer input[type="text"][sciter-selection-caret-hidden]:focus,
+.metro-flyout-drawer input[type="password"][sciter-selection-caret-hidden]:focus {
+    text-selection-caret-color: transparent !important;
+    caret-color: transparent !important;
+}
+
+.metro-text-input.has-red-border {
+    border-color: #b71c1c !important;
+}
+
+.metro-flyout-drawer .gui-check,
+.metro-flyout-drawer .gui-check span {
+    color: #333333 !important;
+}
+
+.metro-flyout-drawer .gui-check-box {
+    background-color: #ffffff !important;
+    border: 1px solid #999999 !important;
+}
+
+.metro-flyout-drawer .gui-check input[type="checkbox"]:checked+.gui-check-box {
+    background-color: #0082a6 !important;
+    border-color: #0082a6 !important;
+}
+
+#lblProtocol {
+    color: #0082a6 !important;
+    font-weight: 600;
+}
+
+.input-with-clear {
+    width: 1*;
+    min-width: 0;
+    height: 26px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    position: relative;
+}
+
+.btn-clear-input {
+    behavior: clickable;
+    width: 22px;
+    height: 26px;
+    line-height: 24px;
+    position: absolute;
+    right: 4px;
+    top: 0;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    color: #888888;
+    font-size: 11px;
+    cursor: default;
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+}
+
+.btn-clear-input:hover {
+    color: #00acc1;
+}
+
+.btn-clear-input:active {
+    color: #ffffff;
+}
+
+.options-grid {
+    width: 100%;
+    margin-left: 54px;
+    margin-bottom: 6px;
+    flow: horizontal;
+}
+
+.options-col {
+    width: 1*;
+    min-width: 0;
+    flow: vertical;
+    border-spacing: 4px;
+}
+
+.chk-inline-icon {
+    width: 13px;
+    height: 13px;
+    margin-right: 3px;
+    content-vertical-align: middle;
+}
+
+.bottom-btn-bar {
+    width: 100%;
+    margin-top: 1*;
+    margin-bottom: 1*;
+    flow: horizontal;
+    border-spacing: 8px;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+}
+
+.btn-metro-action {
+    behavior: clickable;
+    height: 28px;
+    padding: 0 16px;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: default;
+    border-radius: 1px;
+    transition: background-color 0.15s ease;
+}
+
+.btn-primary-ok {
+    background: #0082a6;
+    border: 1px solid #0082a6;
+    color: #ffffff;
+    min-width: 72px;
+}
+
+.btn-primary-ok:hover {
+    background: #0097c2;
+    border-color: #0097c2;
+}
+
+.btn-primary-ok:active {
+    background: #00637f !important;
+    border-color: #00637f !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary-cancel {
+    background: #f0f0f0;
+    border: 1px solid #cccccc;
+    color: #333333;
+    min-width: 72px;
+}
+
+.btn-secondary-cancel:hover {
+    background: #e0e0e0;
+    border-color: #bbbbbb;
+    color: #000000;
+}
+
+.btn-secondary-cancel:active {
+    background: #d0d0d0 !important;
+    border-color: #0082a6 !important;
+    color: #000000 !important;
+}
+
+.btn-aux-help,
+.btn-aux-pro {
+    background: #f0f0f0;
+    border: 1px solid #cccccc;
+    color: #333333;
+}
+
+.btn-aux-help:hover,
+.btn-aux-pro:hover {
+    background: #e0e0e0;
+    border-color: #bbbbbb;
+    color: #000000;
+}
+
+.btn-aux-help:active,
+.btn-aux-pro:active {
+    background: #191919 !important;
+    border-color: #0082a6 !important;
+    color: #ffffff !important;
+}
+
+/* Settings View Light Theme Override */
+#viewSettings {
+    background: #ffffff;
+    color: #222222;
+}
+
+#viewSettings .page-title {
+    color: #222222;
+}
+
+#viewSettings .btn-round-back {
+    background: #f0f0f0;
+    border-color: #cccccc;
+    color: #222222;
+}
+
+#viewSettings .btn-round-back:hover {
+    background: #0082a6;
+    border-color: #0082a6;
+    color: #ffffff;
+}
+
+#viewSettings .btn-round-back:active {
+    background: #005b7f !important;
+    border-color: #005b7f !important;
+}
+
+#viewSettings .gui-check {
+    color: #222222;
+    font-size: 13px;
+}
+
+/* Light Theme Checkbox & Radio Styling */
+#viewSettings .gui-check-box,
+#viewSettings .gui-radio-box {
+    border: 1px solid #888888;
+    background-color: #ffffff;
+}
+
+#viewSettings .gui-check input[type="checkbox"]:checked+.gui-check-box {
+    background-color: #0082a6;
+    border-color: #0082a6;
+}
+
+#viewSettings .gui-check input[type="radio"]:checked+.gui-radio-box {
+    border-color: #0082a6;
+}
+
+#viewSettings .gui-check input[type="radio"]:checked+.gui-radio-box .gui-radio-dot {
+    background-color: #0082a6;
+}
+
+#viewSettings .gui-check:hover .gui-check-box,
+#viewSettings .gui-check:hover .gui-radio-box {
+    border-color: #0082a6;
+}
+
+.settings-group-row {
+    width: 100%;
+    flow: horizontal;
+    margin-bottom: 12px;
+}
+
+.settings-label {
+    width: 80px;
+    min-width: 80px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #222222;
+    padding-top: 5px;
+}
+
+.settings-content {
+    width: 1*;
+    min-width: 0;
+    flow: vertical;
+    border-spacing: 6px;
+}
+
+.settings-input-group {
+    width: 100%;
+    flow: horizontal;
+    border-spacing: 6px;
+    content-vertical-align: middle;
+}
+
+#viewSettings .metro-input-shell {
+    box-sizing: border-box;
+    width: 1*;
+    min-width: 0;
+    height: 28px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    padding: 0 8px;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 0;
+    cursor: text;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#viewSettings .metro-input-shell:hover {
+    border-color: #0082a6 !important;
+    box-shadow: 0 0 0 2px var(--accent-glow, rgba(0, 130, 166, .35));
+}
+
+#viewSettings .metro-input-shell:focus-within,
+#viewSettings .metro-input-shell[input-focused],
+#viewSettings .metro-input-shell[text-menu-open] {
+    border-color: #0082a6 !important;
+    box-shadow: 0 0 0 2px var(--accent-glow, rgba(0, 130, 166, .35));
+}
+
+#viewSettings .metro-input-shell>input,
+#viewSettings .metro-input-shell>input[type="text"],
+#viewSettings .metro-input-shell>input.settings-text-input {
+    box-sizing: border-box;
+    width: 1*;
+    min-width: 0;
+    height: 26px;
+    padding: 0 !important;
+    content-vertical-align: middle;
+    color: #222222 !important;
+    caret-color: #222222 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: text;
+    transition: none;
+    font-size: 12px;
+}
+
+#viewSettings .metro-input-shell>input:focus,
+#viewSettings .metro-input-shell>input[type="text"]:focus,
+#viewSettings .metro-input-shell>input.settings-text-input:focus {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#selLanguage {
+    box-sizing: border-box;
+    width: 160px;
+    padding: 0 4px !important;
+    padding-left: 6px !important;
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #222222 !important;
+    font-size: 13px !important;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif !important;
+    content-vertical-align: middle;
+    text-align: left;
+}
+
+#selLanguage:hover {
+    border-color: #0082a6 !important;
+}
+
+#selLanguage:focus {
+    border-color: #0082a6 !important;
+    box-shadow: 0 0 0 2px var(--accent-glow, rgba(0, 130, 166, .35));
+}
+
+#selLanguage>caption {
+    padding: 0 !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    text-align: left !important;
+    content-horizontal-align: left !important;
+    line-height: 26px;
+}
+
+select>popup>option:hover,
+select>popup>option:current,
+select>popup>option:checked,
+#selLanguage>popup>option:hover,
+#selLanguage>popup>option:current,
+#selLanguage>popup>option:checked {
+    background: #0082a6 !important;
+    background-color: #0082a6 !important;
+    color: #ffffff !important;
+}
+
+.settings-btn-action {
+    behavior: clickable;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    color: #222222;
+    font-size: 13px;
+    flow: horizontal;
+    content-horizontal-align: center;
+    content-vertical-align: middle;
+    cursor: default;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.settings-btn-action:hover {
+    background: #f0f0f0;
+    border-color: #0082a6;
+}
+
+.settings-btn-action:active {
+    background: #0082a6 !important;
+    border-color: #0082a6 !important;
+    color: #ffffff !important;
+}
+
+.settings-btn-action.btn-text-action {
+    width: auto;
+    min-width: 50px;
+    padding: 0 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.settings-footer {
+    width: 100%;
+    margin-top: 24px;
+    padding-top: 14px;
+    border-top: 1px solid #eeeeee;
+    flow: horizontal;
+    border-spacing: 24px;
+    content-vertical-align: middle;
+}
+
+.footer-logo-block {
+    min-width: 120px;
+    flow: horizontal;
+    content-vertical-align: middle;
+}
+
+.footer-info-block {
+    width: 1*;
+    flow: vertical;
+    font-size: 11px;
+    color: #666666;
+    line-height: 1.4;
+}
+
+/* Popups */
+popup.gui-popup-menu {
+    background: #1e1e1e;
+    border: 1px solid #0082a6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    padding: 4px 0;
+    flow: vertical;
+    max-height: 220px;
+    overflow-y: auto;
+    vertical-scrollbar: metro-scrollbar;
+    z-index: 9999;
+}
+
+.gui-popup-item {
+    behavior: clickable;
+    height: 26px;
+    padding: 0 12px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    font-size: 12px;
+    color: #dddddd;
+    cursor: default;
+}
+
+.gui-popup-item:hover {
+    background: #0082a6;
+    color: #ffffff;
+}
+
+popup.gui-popup-menu-light {
+    background: #ffffff;
+    border: 1px solid #0082a6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+popup.gui-popup-menu-light .gui-popup-item {
+    color: #222222;
+}
+
+popup.gui-popup-menu-light .gui-popup-item:hover {
+    background: #0082a6;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Windows Metro Light Context Menu Styles for Input Right-click
+   ========================================================================== */
+popup.metro-context-menu {
+    width: 160px;
+    min-width: 160px;
+    padding: 3px 0;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    flow: vertical;
+}
+
+popup.metro-context-menu .context-command-item {
+    height: 26px;
+    padding: 0 14px;
+    flow: horizontal;
+    content-vertical-align: middle;
+    color: #222222;
+    cursor: default;
+    font-size: 12px;
+    background: transparent;
+    transition: background-color 0.1s ease-out, color 0.1s ease-out;
+}
+
+popup.metro-context-menu .context-command-item:hover {
+    background: #0082a6;
+    color: #ffffff;
+}
+
+popup.metro-context-menu .context-command-item:hover .context-shortcut {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+popup.metro-context-menu .context-command-item:active {
+    background: #006f8e;
+    color: #ffffff;
+}
+
+popup.metro-context-menu .context-command-item[disabled],
+popup.metro-context-menu .context-command-item[disabled]:hover {
+    behavior: none;
+    background: transparent;
+    color: #aaaaaa;
+    cursor: default;
+}
+
+popup.metro-context-menu .context-command-item[disabled] .context-shortcut {
+    color: #cccccc;
+}
+
+popup.metro-context-menu .context-command-item>span:first-child {
+    width: 1*;
+}
+
+popup.metro-context-menu .context-shortcut {
+    color: #888888;
+    font-size: 11px;
+    margin-left: 8px;
+}
+
+popup.metro-context-menu .context-menu-separator {
+    height: 1px;
+    background: #e5e5e5;
+    margin: 3px 1px;
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="BEBuild">
+      <UniqueIdentifier>{ccaaaa6b-ef2e-4626-9649-5082585ad755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="程序集">
+      <UniqueIdentifier>{7d02dc0e-e52c-4c29-be1c-d379c0edf469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{d69359df-ec44-47d4-930c-e0866618fb26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BEBuild\SciterUI">
+      <UniqueIdentifier>{e8cb1860-3b39-44ed-9f8b-a32a99d5949c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BEBuild\BEWebCodec">
+      <UniqueIdentifier>{bf9ac41c-a87b-42d1-a9c4-ff573a6a7ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BEBuild\coutlog">
+      <UniqueIdentifier>{60a58d30-8fd8-4911-869d-dfc6b6bd99a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BEBuild\系统服务注册">
+      <UniqueIdentifier>{ee2426e3-645a-4dff-b169-0b746ece74b3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="窗口\_\_启动窗口_.cpp">
+      <Filter>BEBuild</Filter>
+    </ClCompile>
+    <ClCompile Include="窗口\_启动窗口.cpp">
+      <Filter>程序集</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\SciterUI\NTCps.cpp">
+      <Filter>BEBuild\SciterUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\SciterUI\SciterDom.cpp">
+      <Filter>BEBuild\SciterUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\SciterUI\SciterObj.cpp">
+      <Filter>BEBuild\SciterUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\SciterUI\SciterUI.cpp">
+      <Filter>BEBuild\SciterUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\SciterUI\SciterZip.cpp">
+      <Filter>BEBuild\SciterUI</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\BEWebCodec\BEWebCodec.cpp">
+      <Filter>BEBuild\BEWebCodec</Filter>
+    </ClCompile>
+    <ClCompile Include="RcloneService.cpp">
+      <Filter>程序集</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\coutlog\coutlog.cpp">
+      <Filter>BEBuild\coutlog</Filter>
+    </ClCompile>
+    <ClCompile Include="BEMod\系统服务注册\系统服务注册.cpp">
+      <Filter>BEBuild\系统服务注册</Filter>
+    </ClCompile>
+    <ClCompile Include="BEMod\多线程\多线程.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BEMod\BEMod.h">
+      <Filter>BEBuild</Filter>
+    </ClInclude>
+    <ClInclude Include="RcloneService.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="common.hpp">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BEMod\多线程\多线程.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="rcloneGUI.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\admin\Desktop\icon.ico" />
+    <Image Include="icon.ico" />
+  </ItemGroup>
+</Project>

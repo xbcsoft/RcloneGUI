@@ -7,7 +7,7 @@
 var I18N = {};
 var currentLanguage = "zh";
 var currentProtocol = "WebDAV";
-var selectedDriveLetter = "Z:";
+var selectedDriveLetter = "Auto";
 var mountedDrives = [];
 
 // ==========================================================================
@@ -672,6 +672,10 @@ function openNewDrivePanel() {
     var titleEl = document.querySelector("#viewNewDrive .page-title");
     if (titleEl) titleEl.innerText = currentLanguage === "zh" ? "新建驱动器" : "New Drive";
 
+    selectedDriveLetter = "Auto";
+    var driveLetterValEl = document.getElementById("driveLetterVal");
+    if (driveLetterValEl) driveLetterValEl.innerText = "Auto";
+
     selectProtocol("FTP");
     loadDriveLettersFromNative();
 
@@ -1064,8 +1068,8 @@ function saveAndMountDrive() {
             driveName = getUniqueDriveName(driveName, "");
         }
 
-        // 是否需要触发连接：严格检查是否勾选了“登录时重新连接”
-        var shouldMount = !!isReconnect;
+        // 是否需要触发连接：若当前本身已经连接，则确定后必须真实重连；若是新建驱动器，则根据是否勾选登录时重连
+        var shouldMount = wasConnected ? true : (!origName && !!isReconnect);
 
         var driveObj = {
             name: driveName,
@@ -1117,12 +1121,15 @@ function saveAndMountDrive() {
         // 4. 异步处理旧挂载卸载、配置同步与重新挂载
         setTimeout(async function() {
             try {
-                // 如果之前处于连接状态，先断开旧连接
+                // 如果之前处于连接状态，先真实断开旧连接
                 if (wasConnected) {
-                    if (origLetter) {
+                    if (origName) {
+                        try { await unmountDriveHTTP(origName); } catch(e) {}
+                    }
+                    if (origLetter && origLetter !== "Auto" && origLetter !== "*") {
                         try { await callRcloneRC("mount/unmount", { mountPoint: origLetter }); } catch(e) {}
                     }
-                    if (driveObj.letter && driveObj.letter !== origLetter) {
+                    if (driveObj.letter && driveObj.letter !== origLetter && driveObj.letter !== "Auto" && driveObj.letter !== "*") {
                         try { await callRcloneRC("mount/unmount", { mountPoint: driveObj.letter }); } catch(e) {}
                     }
                 }
@@ -1282,6 +1289,12 @@ async function updateAppVersions() {
     if (typeof Native_GetGuiVersion === "function") {
         try {
             guiVer = Native_GetGuiVersion() || "";
+            if (guiVer) {
+                var parts = guiVer.split(".");
+                if (parts.length > 3) {
+                    guiVer = parts.slice(0, 3).join(".");
+                }
+            }
         } catch(e) {}
     }
     var lblGui = document.getElementById("lblGuiVersion");
@@ -1387,7 +1400,71 @@ async function initApp() {
     }, 200);
 }
 
+var isRefreshingDrives = false;
+async function manualRefreshDrives() {
+    if (isRefreshingDrives) return;
+    isRefreshingDrives = true;
+    logDebug("[manualRefreshDrives] Triggered manual refresh...");
+
+    var btn = document.getElementById("btnRefresh");
+    if (btn) btn.classList.add("refreshing");
+
+    try {
+        // 1. 重新从本地 rclone.conf 加载驱动器配置列表（以 rclone.conf 为主）
+        loadDrivesFromNative();
+        loadDriveLettersFromNative();
+        loadSettingsFromNative();
+
+        // 2. 通过 HTTP 查询当前 rclone 守护进程 / 服务的实时挂载点状态
+        let listRes = null;
+        try {
+            listRes = await callRcloneRC("mount/listmounts", {});
+        } catch (e) {
+            logDebug("[manualRefreshDrives] call mount/listmounts error: " + e);
+        }
+
+        let mountPoints = (listRes && listRes.mountPoints !== undefined) ? listRes.mountPoints : [];
+        logDebug("[manualRefreshDrives] Active mounts: " + JSON.stringify(mountPoints));
+
+        // 3. 将本地配置列表与远程实时挂载点进行匹配
+        for (let i = 0; i < mountedDrives.length; i++) {
+            let drive = mountedDrives[i];
+            if (drive.letter === "*") drive.letter = "Auto";
+
+            let matchedMp = mountPoints.find(mp => {
+                let fsStr = typeof mp === "object" ? (mp.Fs || mp.fs || "") : (typeof mp === "string" ? mp : "");
+                let rName = fsStr.split(":")[0].trim().toUpperCase();
+                return rName === drive.name.toUpperCase();
+            });
+
+            if (matchedMp) {
+                drive.status = "connected";
+                let mpStr = typeof matchedMp === "string" ? matchedMp : (matchedMp.MountPoint || matchedMp.mountPoint || "");
+                if (mpStr.endsWith("\\") || mpStr.endsWith("/")) mpStr = mpStr.slice(0, -1);
+                drive.currentMountedLetter = mpStr;
+            } else {
+                drive.status = "disconnected";
+                drive.currentMountedLetter = "";
+            }
+        }
+
+        // 4. 刷新渲染列表视图并更新容量、版本与服务状态
+        renderDriveCards();
+        updateAllDrivesSpace();
+        updateAppVersions();
+        updateServiceStatus();
+    } catch (err) {
+        console.error("manualRefreshDrives error:", err);
+    } finally {
+        setTimeout(function() {
+            if (btn) btn.classList.remove("refreshing");
+            isRefreshingDrives = false;
+        }, 500);
+    }
+}
+
 globalThis.initApp = initApp;
+globalThis.manualRefreshDrives = manualRefreshDrives;
 globalThis.openDriveLetter = openDriveLetter;
 globalThis.onNativeDriveStatusChange = onNativeDriveStatusChange;
 globalThis.loadDrivesFromNative = loadDrivesFromNative;
@@ -1410,6 +1487,10 @@ document.on("click", "#btnConfirmDeleteOk", function() {
 
 document.on("click", "#btnConfirmDeleteCancel", function() {
     closeConfirmDeleteModal();
+});
+
+document.on("click", "#btnRefresh", function() {
+    manualRefreshDrives();
 });
 
 document.on("click", "#btnAdd", function() {

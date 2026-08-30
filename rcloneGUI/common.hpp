@@ -48,8 +48,6 @@ inline StrX 浏览文件夹(c_StrX 标题, c_StrX 初始目录, bool 地址栏, 
 	return "";
 }
 
-
-
 static bool _匹配挂载路径名(const wchar_t* path, const wchar_t* name)
 {
 	if (!path || !name || !*path || !*name) return false;
@@ -122,10 +120,114 @@ inline StrW 取自身文件版本()
 		WORD major = HIWORD(pFileInfo->dwFileVersionMS);
 		WORD minor = LOWORD(pFileInfo->dwFileVersionMS);
 		WORD build = HIWORD(pFileInfo->dwFileVersionLS);
-		WORD revision = LOWORD(pFileInfo->dwFileVersionLS);
 
-		return sprintF<W>(L"%d.%d.%d.%d", major, minor, build, revision);
+		return sprintF<W>(L"%d.%d.%d", major, minor, build);
 	}
 	return L"";
 }
+
+// =========================================================================
+// 8.3 短路径 + Win32 原生 A 版 API 纯 UTF-8 INI 读写实现
+// 零手写解析器，100% 免疫中文路径与中文内容转码乱码
+// =========================================================================
+
+inline StrA _取短路径A(c_StrX 路径)
+{
+	StrW wPath = 取绝对路径(路径);
+	// 如果文件尚不存在，先以读写方式打开以确保 Windows 文件系统为其生成 8.3 短文件名别名
+	HANDLE h = CreateFileW(wPath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (h != INVALID_HANDLE_VALUE) {
+		CloseHandle(h);
+	}
+	WCHAR wShort[MAX_PATH] = { 0 };
+	if (GetShortPathNameW(wPath, wShort, MAX_PATH) > 0) {
+		char szShort[MAX_PATH] = { 0 };
+		WideCharToMultiByte(CP_ACP, 0, wShort, -1, szShort, MAX_PATH, NULL, NULL);
+		return StrA(szShort);
+	}
+	char szAnsi[MAX_PATH] = { 0 };
+	WideCharToMultiByte(CP_ACP, 0, (const wchar_t*)wPath, -1, szAnsi, MAX_PATH, NULL, NULL);
+	return StrA(szAnsi);
 }
+
+/** 读配置项_U8 (纯 UTF-8 字节直通，支持任意语言文件名与节名/键值) */
+inline StrA 读配置项_U8(c_StrA 配置文件名, c_StrA 节名称, c_StrA 配置项名称, c_StrA 默认文本 = "")
+{
+	StrA shortPath = _取短路径A(配置文件名);
+	DWORD size = 2048;
+	StrA buf(size);
+	while (true) {
+		DWORD ret = GetPrivateProfileStringA((const char*)节名称, (const char*)配置项名称, (const char*)默认文本, (char*)buf, size, (const char*)shortPath);
+		if (ret < size - 1) {
+			return StrA((const char*)buf, ret);
+		}
+		buf.reset(size *= 2);
+	}
+}
+
+/** 写配置项_U8 (纯 UTF-8 字节直通，支持任意语言文件名与节名/键值) */
+inline bool 写配置项_U8(c_StrA 配置文件名, c_StrA 节名称, NilOpt<c_StrA> 配置项名称 = nil, NilOpt<c_StrA> 欲写入值 = nil)
+{
+	StrA shortPath = _取短路径A(配置文件名);
+	const char* lpKey = (配置项名称 != nil) ? (const char*)(const StrA&)配置项名称 : NULL;
+	const char* lpString = (欲写入值 != nil) ? (const char*)(const StrA&)欲写入值 : NULL;
+	return WritePrivateProfileStringA((const char*)节名称, lpKey, lpString, (const char*)shortPath) != 0;
+}
+
+/** 取配置节名_U8 (纯 UTF-8 字节直通，支持任意语言文件名与节名) */
+inline Arraybe<StrA> 取配置节名_U8(c_StrA 配置文件名)
+{
+	Arraybe<StrA> res;
+	StrA shortPath = _取短路径A(配置文件名);
+	DWORD size = 8192;
+	StrA buf(size);
+	while (true) {
+		DWORD ret = GetPrivateProfileSectionNamesA((char*)buf, size, (const char*)shortPath);
+		if (ret < size - 2) {
+			char* p = (char*)buf;
+			while (p < (char*)buf + ret && *p) {
+				res.push(StrA(p));
+				p += strlen(p) + 1;
+			}
+			break;
+		}
+		size *= 2;
+		buf.reset(size);
+	}
+	return res;
+}
+
+/** 取配置项名_U8 (纯 UTF-8 字节直通，支持任意语言文件名与键名) */
+inline Arraybe<StrA> 取配置项名_U8(c_StrA 配置文件名, c_StrA 节名称)
+{
+	Arraybe<StrA> res;
+	StrA shortPath = _取短路径A(配置文件名);
+	DWORD size = 8192;
+	StrA buf(size);
+	while (true) {
+		DWORD ret = GetPrivateProfileSectionA((const char*)节名称, (char*)buf, size, (const char*)shortPath);
+		if (ret < size - 2) {
+			char* p = (char*)buf;
+			while (p < (char*)buf + ret && *p) {
+				const char* eq = strchr(p, '=');
+				if (eq) {
+					res.push(StrA(p, eq - p));
+				} else {
+					res.push(StrA(p));
+				}
+				p += strlen(p) + 1;
+			}
+			break;
+		}
+		size *= 2;
+		buf.reset(size);
+	}
+	return res;
+}
+
+} // namespace common
+
+using common::读配置项_U8;
+using common::写配置项_U8;
+using common::取配置节名_U8;
+using common::取配置项名_U8;

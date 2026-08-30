@@ -2,6 +2,7 @@ export default {
     lang_display_name: "English",
     app_title: "rcloneGUI",
     btn_upgrade: "Upgrade",
+    btn_refresh: "Refresh",
     btn_add: "Add",
     btn_settings: "Settings",
     

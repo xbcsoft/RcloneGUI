@@ -1,5 +1,6 @@
-#pragma once
+﻿#pragma once
 #include <BEMod.h>
+#include "common.hpp"
 
 struct DriveConfig
 {
@@ -119,6 +120,9 @@ private:
 	static Arraybe<StrA> SplitString(const StrA& str, char delim);
 
 	void 保存驱动器排序();
+
+public:
+	void 置驱动器排序(const Arraybe<StrA>& orderList);
 
 	void 加载本地驱动器配置();
 

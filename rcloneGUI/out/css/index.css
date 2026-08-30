@@ -160,6 +160,14 @@ html[window-active] body {
     font-weight: 600;
 }
 
+.btn-refresh {
+    font-weight: 500;
+}
+
+.btn-refresh:hover svg path {
+    fill: #80deea;
+}
+
 .btn-add {
     font-weight: 600;
 }

@@ -3,7 +3,7 @@
 #include "../common.hpp"
 #include "../RcloneService.h"
 
-// Rebuilt cleanly v7
+// Rebuilt cleanly v11
 struct __启动窗口 : 窗口
 {
 	SciterDom dom;
@@ -20,7 +20,6 @@ struct __启动窗口 : 窗口
 					return 资源返回(pld, appIconPng);
 				}
 			}
-
 			ssize_t idx = 倒找文本(uri, L"/lang/");
 			if (idx >= 0) {
 				StrW fName = 取文本右边(uri, uri.len() - idx - 6);
@@ -187,6 +186,7 @@ void __启动窗口::事件_创建完毕()
 
 	// 3.2 获取所有驱动器列表
 	dom.注入JS函数("Native_GetDrivesList", [this](SciterObj& arg) -> SciterObj {
+		svc.加载本地驱动器配置();
 		auto drives = svc.取所有网盘配置();
 		SciterObj arr;
 		for (int i = 0; i < drives.count; ++i) {

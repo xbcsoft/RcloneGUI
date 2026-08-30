@@ -2,6 +2,7 @@ export default {
     lang_display_name: "简体中文 (Chinese)",
     app_title: "rcloneGUI",
     btn_upgrade: "升级",
+    btn_refresh: "刷新",
     btn_add: "添加",
     btn_settings: "设置",
     

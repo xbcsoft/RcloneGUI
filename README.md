@@ -1,6 +1,6 @@
 # rcloneGUI
 
-基于 **白易 (BE) + Sciter UI** 开发的轻量、易用 Windows 远程盘符挂载管理工具（基于 rclone 内核）。
+基于 **白易 (BE) + Sciter UI** + **rclone 内核** 开发的轻量、易用 Windows 远程盘符挂载管理工具。
 
 ---
 

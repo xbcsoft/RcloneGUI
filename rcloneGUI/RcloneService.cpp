@@ -186,25 +186,25 @@ public:
 		StrA sec = finalConfig.name;
 		StrA protoType = (finalConfig.protocol == "SFTP") ? "sftp" : ((finalConfig.protocol == "FTP") ? "ftp" : "webdav");
 
-		写配置项(_configFilePath, sec, "type", protoType);
-		写配置项(_configFilePath, sec, "host", finalConfig.host);
-		写配置项(_configFilePath, sec, "port", finalConfig.port);
-		写配置项(_configFilePath, sec, "letter", finalConfig.letter);
-		写配置项(_configFilePath, sec, "user", finalConfig.username);
-		写配置项(_configFilePath, sec, "pass", finalConfig.password);
-		写配置项(_configFilePath, sec, "isReconnect", finalConfig.isReconnect ? "true" : "false");
-		写配置项(_configFilePath, sec, "isLocalDisk", finalConfig.isLocalDisk ? "true" : "false");
-		写配置项(_configFilePath, sec, "isReadOnly", finalConfig.isReadOnly ? "true" : "false");
-		写配置项(_configFilePath, sec, "isFileLock", finalConfig.isFileLock ? "true" : "false");
+		写配置项_U8(_configFilePath, sec, "type", protoType);
+		写配置项_U8(_configFilePath, sec, "host", finalConfig.host);
+		写配置项_U8(_configFilePath, sec, "port", finalConfig.port);
+		写配置项_U8(_configFilePath, sec, "letter", finalConfig.letter);
+		写配置项_U8(_configFilePath, sec, "user", finalConfig.username);
+		写配置项_U8(_configFilePath, sec, "pass", finalConfig.password);
+		写配置项_U8(_configFilePath, sec, "isReconnect", finalConfig.isReconnect ? "true" : "false");
+		写配置项_U8(_configFilePath, sec, "isLocalDisk", finalConfig.isLocalDisk ? "true" : "false");
+		写配置项_U8(_configFilePath, sec, "isReadOnly", finalConfig.isReadOnly ? "true" : "false");
+		写配置项_U8(_configFilePath, sec, "isFileLock", finalConfig.isFileLock ? "true" : "false");
 
 		if (finalConfig.path.len() > 0 && finalConfig.path != "undefined") {
-			写配置项(_configFilePath, sec, "path", finalConfig.path);
+			写配置项_U8(_configFilePath, sec, "path", finalConfig.path);
 		}
 		if (finalConfig.privateKey.len() > 0 && finalConfig.privateKey != "undefined") {
-			写配置项(_configFilePath, sec, "key_file", finalConfig.privateKey);
+			写配置项_U8(_configFilePath, sec, "key_file", finalConfig.privateKey);
 		}
 		if (finalConfig.charset.len() > 0 && finalConfig.charset != "undefined") {
-			写配置项(_configFilePath, sec, "charset", finalConfig.charset);
+			写配置项_U8(_configFilePath, sec, "charset", finalConfig.charset);
 		}
 
 		if (finalConfig.protocol == "WebDAV") {
@@ -214,29 +214,29 @@ public:
 				if (finalConfig.path[0] == '/') url += finalConfig.path;
 				else url += "/" + finalConfig.path;
 			}
-			写配置项(_configFilePath, sec, "url", url);
-			写配置项(_configFilePath, sec, "vendor", "other");
+			写配置项_U8(_configFilePath, sec, "url", url);
+			写配置项_U8(_configFilePath, sec, "vendor", "other");
 			if (finalConfig.isSSL) {
-				写配置项(_configFilePath, sec, "no_check_certificate", "true");
+				写配置项_U8(_configFilePath, sec, "no_check_certificate", "true");
 			}
 		}
 		else if (finalConfig.protocol == "FTP") {
 			if (finalConfig.isSSL) {
-				写配置项(_configFilePath, sec, "tls", "true");
-				写配置项(_configFilePath, sec, "explicit_tls", "false");
-				写配置项(_configFilePath, sec, "no_check_certificate", "true");
+				写配置项_U8(_configFilePath, sec, "tls", "true");
+				写配置项_U8(_configFilePath, sec, "explicit_tls", "false");
+				写配置项_U8(_configFilePath, sec, "no_check_certificate", "true");
 			} else if (finalConfig.isExplicit) {
-				写配置项(_configFilePath, sec, "explicit_tls", "true");
-				写配置项(_configFilePath, sec, "tls", "false");
-				写配置项(_configFilePath, sec, "no_check_certificate", "true");
+				写配置项_U8(_configFilePath, sec, "explicit_tls", "true");
+				写配置项_U8(_configFilePath, sec, "tls", "false");
+				写配置项_U8(_configFilePath, sec, "no_check_certificate", "true");
 			} else {
-				写配置项(_configFilePath, sec, "tls", "false");
-				写配置项(_configFilePath, sec, "explicit_tls", "false");
+				写配置项_U8(_configFilePath, sec, "tls", "false");
+				写配置项_U8(_configFilePath, sec, "explicit_tls", "false");
 			}
 			if (finalConfig.isPassive) {
-				写配置项(_configFilePath, sec, "pass_mode", "passive");
+				写配置项_U8(_configFilePath, sec, "pass_mode", "passive");
 			}
-			写配置项(_configFilePath, sec, "disable_mlsd", "true");
+			写配置项_U8(_configFilePath, sec, "disable_mlsd", "true");
 		}
 
 		dbg_log("[保存网盘配置] 已直接写入 INI rclone.conf: sec='%s', letter='%s'", (const char*)sec, (const char*)finalConfig.letter);
@@ -251,7 +251,7 @@ public:
 	{
 		卸载驱动器(name, outErr);
 
-		写配置项(_configFilePath, name, nil, nil);
+		写配置项_U8(_configFilePath, name, nil, nil);
 
 		{
 			自动锁 lock(_mutex);
@@ -396,12 +396,12 @@ public:
 		_settings = settings;
 		_settingsFilePath = _appDir + "\\settings.ini";
 
-		写配置项(_settingsFilePath, "Settings", "openExplorerOnConnect", settings.openExplorerOnConnect ? "true" : "false");
-		写配置项(_settingsFilePath, "Settings", "language", settings.language);
-		写配置项(_settingsFilePath, "Settings", "cachePath", settings.cachePath);
-		写配置项(_settingsFilePath, "Settings", "rcPort", 到文本(settings.rcPort));
-		写配置项(_settingsFilePath, "Settings", "rcUser", settings.rcUser);
-		写配置项(_settingsFilePath, "Settings", "rcPass", settings.rcPass);
+		写配置项_U8(_settingsFilePath, "Settings", "openExplorerOnConnect", settings.openExplorerOnConnect ? "true" : "false");
+		写配置项_U8(_settingsFilePath, "Settings", "language", settings.language);
+		写配置项_U8(_settingsFilePath, "Settings", "cachePath", settings.cachePath);
+		写配置项_U8(_settingsFilePath, "Settings", "rcPort", 到文本(settings.rcPort));
+		写配置项_U8(_settingsFilePath, "Settings", "rcUser", settings.rcUser);
+		写配置项_U8(_settingsFilePath, "Settings", "rcPass", settings.rcPass);
 
 		if (settings.autoStartNoGUI) {
 			设置自启动模式(2);
@@ -554,7 +554,10 @@ public:
 		if (respBody.size > 0) {
 			return StrA((const char*)respBody.buf, respBody.size);
 		}
-		return "{}";
+		if (statusCode == 200) {
+			return "{}";
+		}
+		return "{\"error\":\"HTTP request failed or timeout\"}";
 	}
 
 	void 自动挂载所有重连网盘()
@@ -643,6 +646,7 @@ private:
 	{
 		StrA args = "rcd --rc-addr 127.0.0.1:" + 到文本(port) +
 			" --rc-user \"" + user + "\" --rc-pass \"" + pass + "\" --rc-no-auth --rc-allow-origin \"*\"" +
+			" --contimeout 4s --timeout 8s --low-level-retries 1 --retries 1" +
 			" --transfers 8 --checkers 16 --multi-thread-streams 8 --multi-thread-cutoff 10M --buffer-size 32M" +
 			" --links --skip-links --config \"" + configPath + "\"";
 		return 运行(exePath, args, false, 1);
@@ -677,16 +681,17 @@ private:
 			orderStr += _drives[i].name;
 		}
 		_settingsFilePath = _appDir + "\\settings.ini";
-		写配置项(_settingsFilePath, "Settings", "driveOrder", orderStr);
+		写配置项_U8(_settingsFilePath, "Settings", "driveOrder", orderStr);
 	}
 
+public:
 	void 加载本地驱动器配置()
 	{
 		dbg_log("[RcloneService] 从 INI 配置文件加载网盘列表: %s", (const char*)_configFilePath);
 		自动锁 lock(_mutex);
 		_drives.clear();
 
-		Arraybe<StrA> sections = 取配置节名(_configFilePath);
+		Arraybe<StrA> sections = 取配置节名_U8(_configFilePath);
 		dbg_log("[RcloneService] 取配置节名 数量=%d", sections.count);
 
 		for (int i = 0; i < sections.count; ++i) {
@@ -696,44 +701,44 @@ private:
 			DriveConfig d;
 			d.name = sectionName;
 
-			StrA typeStr = 读配置项(_configFilePath, sectionName, "type", "");
+			StrA typeStr = 读配置项_U8(_configFilePath, sectionName, "type", "");
 			if (typeStr == "sftp") d.protocol = "SFTP";
 			else if (typeStr == "ftp") d.protocol = "FTP";
 			else if (typeStr == "webdav") d.protocol = "WebDAV";
 			else d.protocol = typeStr;
 
-			d.host = 读配置项(_configFilePath, sectionName, "host", "");
-			d.port = 读配置项(_configFilePath, sectionName, "port", "");
-			d.path = 读配置项(_configFilePath, sectionName, "path", "");
-			d.username = 读配置项(_configFilePath, sectionName, "user", "");
-			d.password = 读配置项(_configFilePath, sectionName, "pass", "");
-			d.letter = 读配置项(_configFilePath, sectionName, "letter", "Auto");
+			d.host = 读配置项_U8(_configFilePath, sectionName, "host", "");
+			d.port = 读配置项_U8(_configFilePath, sectionName, "port", "");
+			d.path = 读配置项_U8(_configFilePath, sectionName, "path", "");
+			d.username = 读配置项_U8(_configFilePath, sectionName, "user", "");
+			d.password = 读配置项_U8(_configFilePath, sectionName, "pass", "");
+			d.letter = 读配置项_U8(_configFilePath, sectionName, "letter", "Auto");
 			if (d.letter == "*") d.letter = "Auto";
 
-			StrA recStr = 读配置项(_configFilePath, sectionName, "isReconnect", "false");
+			StrA recStr = 读配置项_U8(_configFilePath, sectionName, "isReconnect", "false");
 			d.isReconnect = (recStr == "true" || recStr == "1");
 
-			StrA localStr = 读配置项(_configFilePath, sectionName, "isLocalDisk", "false");
+			StrA localStr = 读配置项_U8(_configFilePath, sectionName, "isLocalDisk", "false");
 			d.isLocalDisk = (localStr == "true" || localStr == "1");
 
-			StrA roStr = 读配置项(_configFilePath, sectionName, "isReadOnly", "false");
+			StrA roStr = 读配置项_U8(_configFilePath, sectionName, "isReadOnly", "false");
 			d.isReadOnly = (roStr == "true" || roStr == "1");
 
-			StrA lockStr = 读配置项(_configFilePath, sectionName, "isFileLock", "false");
+			StrA lockStr = 读配置项_U8(_configFilePath, sectionName, "isFileLock", "false");
 			d.isFileLock = (lockStr == "true" || lockStr == "1");
 
-			StrA sslStr = 读配置项(_configFilePath, sectionName, "tls", "false");
+			StrA sslStr = 读配置项_U8(_configFilePath, sectionName, "tls", "false");
 			d.isSSL = (sslStr == "true" || sslStr == "1");
 
-			StrA explStr = 读配置项(_configFilePath, sectionName, "explicit_tls", "false");
+			StrA explStr = 读配置项_U8(_configFilePath, sectionName, "explicit_tls", "false");
 			d.isExplicit = (explStr == "true" || explStr == "1");
 
-			StrA passvStr = 读配置项(_configFilePath, sectionName, "pass_mode", "passive");
+			StrA passvStr = 读配置项_U8(_configFilePath, sectionName, "pass_mode", "passive");
 			d.isPassive = (passvStr == "passive" || passvStr == "true" || passvStr == "1");
 
-			d.privateKey = 读配置项(_configFilePath, sectionName, "key_file", "");
+			d.privateKey = 读配置项_U8(_configFilePath, sectionName, "key_file", "");
 			if (d.privateKey == "undefined") d.privateKey = "";
-			d.charset = 读配置项(_configFilePath, sectionName, "charset", "utf-8");
+			d.charset = 读配置项_U8(_configFilePath, sectionName, "charset", "utf-8");
 			if (d.path == "undefined") d.path = "";
 
 			d.status = "disconnected";
@@ -745,7 +750,7 @@ private:
 		}
 
 		_settingsFilePath = _appDir + "\\settings.ini";
-		StrA orderStr = 读配置项(_settingsFilePath, "Settings", "driveOrder", "");
+		StrA orderStr = 读配置项_U8(_settingsFilePath, "Settings", "driveOrder", "");
 		if (orderStr.len() > 0) {
 			Arraybe<StrA> orderList = SplitString(orderStr, ',');
 			Arraybe<DriveConfig> sortedDrives;
@@ -778,18 +783,18 @@ private:
 		_settings.autoStart = (mode == 1);
 		_settings.autoStartNoGUI = (mode == 2);
 
-		StrA openExpStr = 读配置项(_settingsFilePath, "Settings", "openExplorerOnConnect", "false");
+		StrA openExpStr = 读配置项_U8(_settingsFilePath, "Settings", "openExplorerOnConnect", "false");
 		_settings.openExplorerOnConnect = (openExpStr == "true" || openExpStr == "1");
 
-		_settings.language = 读配置项(_settingsFilePath, "Settings", "language", "zh");
-		_settings.cachePath = 读配置项(_settingsFilePath, "Settings", "cachePath", "");
+		_settings.language = 读配置项_U8(_settingsFilePath, "Settings", "language", "zh");
+		_settings.cachePath = 读配置项_U8(_settingsFilePath, "Settings", "cachePath", "");
 
-		StrA portStr = 读配置项(_settingsFilePath, "Settings", "rcPort", "5572");
+		StrA portStr = 读配置项_U8(_settingsFilePath, "Settings", "rcPort", "5572");
 		_settings.rcPort = atoi((const char*)portStr);
 		if (_settings.rcPort <= 0) _settings.rcPort = 5572;
 
-		_settings.rcUser = 读配置项(_settingsFilePath, "Settings", "rcUser", "admin");
-		_settings.rcPass = 读配置项(_settingsFilePath, "Settings", "rcPass", "admin123");
+		_settings.rcUser = 读配置项_U8(_settingsFilePath, "Settings", "rcUser", "admin");
+		_settings.rcPass = 读配置项_U8(_settingsFilePath, "Settings", "rcPass", "admin123");
 	}
 
 	void 触发状态回调(c_StrA name, c_StrA status, c_StrA errMsg)

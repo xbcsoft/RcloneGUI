@@ -271,7 +271,6 @@
     <ResourceCompile Include="rcloneGUI.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="C:\Users\admin\Desktop\icon.ico" />
     <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

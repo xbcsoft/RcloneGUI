@@ -98,7 +98,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="C:\Users\admin\Desktop\icon.ico" />
     <Image Include="icon.ico" />
   </ItemGroup>
 </Project>

@@ -346,14 +346,14 @@
         </div>
 
         <div class="settings-group-row">
-            <div class="settings-label" data-i18n="temporary">临时文件夹</div>
+            <div class="settings-label" data-i18n="temporary">缓存文件夹</div>
             <div class="settings-content">
                 <div class="settings-input-group">
                     <div class="metro-input-shell" data-text-input-shell style="width:1*;">
                         <input type="text" class="settings-text-input" id="inputCachePath" value="C:\ProgramData\rcloneGUI\Cache">
                     </div>
                     <div class="settings-btn-action" id="btnBrowseCachePath" title="Browse Cache Folder">📁</div>
-                    <div class="settings-btn-action btn-text-action" onclick="document.getElementById('inputCachePath').value='C:\\ProgramData\\rcloneGUI\\Cache'" data-i18n="btn_default">默认</div>
+                    <div class="settings-btn-action btn-text-action" id="btnDefaultCachePath" data-i18n="btn_default">默认</div>
                 </div>
             </div>
         </div>

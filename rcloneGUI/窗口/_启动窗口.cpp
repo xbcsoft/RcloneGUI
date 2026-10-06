@@ -1,4 +1,4 @@
-#include <BEMod.h>
+﻿#include <BEMod.h>
 #include "../resource.h"
 #include "../common.hpp"
 #include "../RcloneService.h"

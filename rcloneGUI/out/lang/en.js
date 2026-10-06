@@ -66,7 +66,7 @@ export default {
     lang_zh: "简体中文",
     lang_en: "English",
     
-    temporary: "Temporary",
+    temporary: "Cache Folder",
     btn_default: "Default",
     
     sys_service: "Service",

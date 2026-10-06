@@ -126,6 +126,14 @@ function setLanguage(lang) {
         }
     }
 
+    // 标题栏刷新按钮单独兜底，确保语言切换后文本与提示同步更新
+    var refreshBtn = document.getElementById("btnRefresh");
+    if (refreshBtn) {
+        var refreshText = refreshBtn.querySelector("[data-i18n=\"btn_refresh\"]");
+        if (refreshText) refreshText.innerText = dict.btn_refresh || (lang === "zh" ? "刷新" : "Refresh");
+        refreshBtn.setAttribute("title", dict.btn_refresh || (lang === "zh" ? "刷新" : "Refresh"));
+    }
+
     refreshDriveListView();
     updateServiceStatus();
 }
@@ -1266,6 +1274,8 @@ function saveSettingsToNative() {
             cachePath: cacheIn ? cacheIn.value : "C:\\ProgramData\\rcloneGUI\\Cache"
         };
         Native_SaveSettings(obj);
+        // 同步到已运行的 rclone daemon；已挂载驱动器需重新挂载后才会切换缓存目录。
+        try { callRcloneRC("options/set", { main: { CacheDir: obj.cachePath || "C:\\ProgramData\\rcloneGUI\\Cache" } }); } catch (e) {}
     } catch (e) {}
 }
 
@@ -1622,6 +1632,14 @@ document.on("click", "#btnAdd", function() {
 
     document.on("change", "#chkOpenExplorer, #chkCustomIcon, #inputCachePath", function() {
         saveSettingsToNative();
+    });
+
+    document.on("click", "#btnDefaultCachePath", function() {
+        var cacheIn = document.getElementById("inputCachePath");
+        if (cacheIn) {
+            cacheIn.value = "C:\\ProgramData\\rcloneGUI\\Cache";
+            saveSettingsToNative();
+        }
     });
 
     document.on("change", "#selLanguage", function(evt, el) {
@@ -2270,6 +2288,7 @@ async function syncDriveConfigToRC(drive, isPlaintext) {
         parameters.explicit_tls = drive.isExplicit ? "true" : "false";
         parameters.pass_mode = drive.isPassive ? "passive" : "active";
         parameters.disable_mlsd = "true";
+        parameters.idle_timeout = "10s";
     } else if (proto === "webdav") {
         let scheme = drive.isSSL ? "https://" : "http://";
         let url = scheme + (drive.host || "");
@@ -2344,7 +2363,7 @@ async function mountDriveHTTP(drive) {
         ReadAhead: 67108864 // 64MB (预读缓冲大小)
     };
     
-    let cachePath = "";
+    let cachePath = "C:\\ProgramData\\rcloneGUI\\Cache";
     if (typeof Native_GetSettings === "function") {
         try {
             let raw = Native_GetSettings();
@@ -2352,9 +2371,11 @@ async function mountDriveHTTP(drive) {
             if (s && s.cachePath) cachePath = s.cachePath;
         } catch (e) {}
     }
-    if (cachePath) {
-        vfsOpt.CacheDir = cachePath + "\\" + drive.name;
-    }
+    // CacheDir 是 rclone 全局 main 选项，不属于 vfsOpt。
+    // 在挂载前同步全局缓存根目录，VFS 会自行在其下创建 vfs/vfsMeta 层级。
+    try {
+        await callRcloneRC("options/set", { main: { CacheDir: cachePath } });
+    } catch (e) {}
     
     let mountPoint = drive.letter;
     if (!mountPoint || mountPoint === "Auto" || mountPoint === "*") {

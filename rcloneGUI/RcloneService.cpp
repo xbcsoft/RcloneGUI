@@ -1,4 +1,4 @@
-#include <BEMod.h>
+﻿#include <BEMod.h>
 #include "common.hpp"
 
 struct DriveConfig
@@ -62,7 +62,8 @@ public:
 		dbg_log("[RcloneService] 检测 RC 端口 %d", _settings.rcPort);
 		if (!IsPortListening(_settings.rcPort)) {
 			dbg_log("[RcloneService] 端口 %d 未监听，正在后台拉起 rclone.core.exe 守护进程...", _settings.rcPort);
-			bool bStarted = StartRcloneDaemon(_rcloneExePath, _configFilePath, _settings.rcPort, _settings.rcUser, _settings.rcPass, _appDir);
+			StrA cacheDir = _settings.cachePath.len() > 0 ? _settings.cachePath : StrA("C:\\ProgramData\\rcloneGUI\\Cache");
+			bool bStarted = StartRcloneDaemon(_rcloneExePath, _configFilePath, _settings.rcPort, _settings.rcUser, _settings.rcPass, cacheDir);
 			if (bStarted) {
 				dbg_log("[RcloneService] 守护进程拉起成功！端口=%d, 用户名=%s", _settings.rcPort, (const char*)_settings.rcUser);
 			} else {
@@ -75,7 +76,7 @@ public:
 
 	~RcloneService()
 	{
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		for (auto& node : _activeMounts) {
 			if (node.value.hProcess) {
 				TerminateProcess(node.value.hProcess, 0);
@@ -133,7 +134,7 @@ public:
 
 	Arraybe<DriveConfig> 取所有网盘配置()
 	{
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		dbg_log("[RcloneService] 取所有网盘配置, 当前 count=%d", _drives.count);
 		return _drives;
 	}
@@ -148,7 +149,7 @@ public:
 		DriveConfig finalConfig = config;
 
 		{
-			自动锁 lock(_mutex);
+			自动套锁 lock(_mutex);
 			bool found = false;
 			for (int i = 0; i < _drives.count; ++i) {
 				if (_drives[i].name == config.name) {
@@ -237,11 +238,12 @@ public:
 				写配置项_U8(_configFilePath, sec, "pass_mode", "passive");
 			}
 			写配置项_U8(_configFilePath, sec, "disable_mlsd", "true");
+			写配置项_U8(_configFilePath, sec, "idle_timeout", "10s");
 		}
 
 		dbg_log("[保存网盘配置] 已直接写入 INI rclone.conf: sec='%s', letter='%s'", (const char*)sec, (const char*)finalConfig.letter);
 		{
-			自动锁 lock(_mutex);
+			自动套锁 lock(_mutex);
 			保存驱动器排序();
 		}
 		return true;
@@ -254,7 +256,7 @@ public:
 		写配置项_U8(_configFilePath, name, nil, nil);
 
 		{
-			自动锁 lock(_mutex);
+			自动套锁 lock(_mutex);
 			for (int i = 0; i < _drives.count; ++i) {
 				if (_drives[i].name == name) {
 					_drives.del(i);
@@ -383,7 +385,7 @@ public:
 
 	AppSettings 取设置()
 	{
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		int mode = 取自启动模式();
 		_settings.autoStart = (mode == 1);
 		_settings.autoStartNoGUI = (mode == 2);
@@ -392,7 +394,7 @@ public:
 
 	bool 保存设置(const AppSettings& settings)
 	{
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		_settings = settings;
 		_settingsFilePath = _appDir + "\\settings.ini";
 
@@ -573,7 +575,7 @@ public:
 			Sleep(300);
 		}
 
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		for (int i = 0; i < _drives.count; ++i) {
 			const DriveConfig& d = _drives[i];
 			if (!d.isReconnect) {
@@ -583,18 +585,6 @@ public:
 
 			dbg_log("[RcloneService] [自动挂载] 正在挂载: name=%s, letter=%s", (const char*)d.name, (const char*)d.letter);
 
-			StrA cacheDir = _settings.cachePath.len() > 0 ? _settings.cachePath : StrA("C:\\ProgramData\\rcloneGUI\\Cache");
-			cacheDir += "\\" + d.name;
-
-			StrA escapedCacheDir = "";
-			for (size_t c = 0; c < cacheDir.len(); ++c) {
-				if (cacheDir[c] == '\\') {
-					escapedCacheDir += "\\\\";
-				} else {
-					char ch[2] = { cacheDir[c], '\0' };
-					escapedCacheDir += ch;
-				}
-			}
 
 			StrA mountPt = (d.letter == "Auto") ? StrA("*") : d.letter;
 			StrA body = "{\"fs\":\"" + d.name + ":\","
@@ -612,8 +602,7 @@ public:
 					"\"WriteBack\":0,"
 					"\"ChunkSize\":33554432,"
 					"\"ChunkSizeLimit\":536870912,"
-					"\"ReadAhead\":67108864,"
-					"\"CacheDir\":\"" + escapedCacheDir + "\""
+					"\"ReadAhead\":67108864"
 				"}}";
 
 			StrA resp = HttpPostRc(port, user, pass, "mount/mount", body);
@@ -631,7 +620,7 @@ public:
 
 	void 注册状态回调(StatusCallback cb)
 	{
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		_statusCallbacks.push(be::move(cb));
 	}
 
@@ -642,13 +631,13 @@ private:
 		return client.连接("127.0.0.1", port, 100);
 	}
 
-	static bool StartRcloneDaemon(const StrA& exePath, const StrA& configPath, int port, const StrA& user, const StrA& pass, const StrA& appDir)
+	static bool StartRcloneDaemon(const StrA& exePath, const StrA& configPath, int port, const StrA& user, const StrA& pass, const StrA& cacheDir)
 	{
 		StrA args = "rcd --rc-addr 127.0.0.1:" + 到文本(port) +
 			" --rc-user \"" + user + "\" --rc-pass \"" + pass + "\" --rc-no-auth --rc-allow-origin \"*\"" +
-			" --contimeout 4s --timeout 8s --low-level-retries 1 --retries 1" +
+			" --contimeout 4s --timeout 8s --low-level-retries 10 --retries 3" +
 			" --transfers 8 --checkers 16 --multi-thread-streams 8 --multi-thread-cutoff 10M --buffer-size 32M" +
-			" --links --skip-links --config \"" + configPath + "\"";
+			" --links --skip-links --cache-dir \"" + cacheDir + "\" --config \"" + configPath + "\"";
 		return 运行(exePath, args, false, 1);
 	}
 
@@ -688,7 +677,7 @@ public:
 	void 加载本地驱动器配置()
 	{
 		dbg_log("[RcloneService] 从 INI 配置文件加载网盘列表: %s", (const char*)_configFilePath);
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		_drives.clear();
 
 		Arraybe<StrA> sections = 取配置节名_U8(_configFilePath);
@@ -787,7 +776,8 @@ public:
 		_settings.openExplorerOnConnect = (openExpStr == "true" || openExpStr == "1");
 
 		_settings.language = 读配置项_U8(_settingsFilePath, "Settings", "language", "zh");
-		_settings.cachePath = 读配置项_U8(_settingsFilePath, "Settings", "cachePath", "");
+		_settings.cachePath = 读配置项_U8(_settingsFilePath, "Settings", "cachePath", "C:\\ProgramData\\rcloneGUI\\Cache");
+		if (_settings.cachePath.len() == 0) _settings.cachePath = "C:\\ProgramData\\rcloneGUI\\Cache";
 
 		StrA portStr = 读配置项_U8(_settingsFilePath, "Settings", "rcPort", "5572");
 		_settings.rcPort = atoi((const char*)portStr);
@@ -799,7 +789,7 @@ public:
 
 	void 触发状态回调(c_StrA name, c_StrA status, c_StrA errMsg)
 	{
-		自动锁 lock(_mutex);
+		自动套锁 lock(_mutex);
 		for (int i = 0; i < _statusCallbacks.count; ++i) {
 			if (_statusCallbacks[i]) _statusCallbacks[i](name, status, errMsg);
 		}

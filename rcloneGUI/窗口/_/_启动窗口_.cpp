@@ -22,6 +22,6 @@ void __启动窗口::完毕(bool 模态)
 	cs.内存_zip = R::htmZip;
 #endif
 
-	st.创建(cs, this);
+	st.绑定(cs, this);
 	窗口::完毕(模态);
 }

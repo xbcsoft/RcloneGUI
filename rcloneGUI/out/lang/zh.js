@@ -66,7 +66,7 @@ export default {
     lang_zh: "简体中文",
     lang_en: "English",
     
-    temporary: "临时文件夹",
+    temporary: "缓存文件夹",
     btn_default: "默认",
     
     sys_service: "系统服务",

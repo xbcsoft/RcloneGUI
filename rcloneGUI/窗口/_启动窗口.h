@@ -4,7 +4,7 @@
 #include "../common.hpp"
 #include "../RcloneService.h"
 
-// Rebuilt cleanly v7
+// Rebuilt cleanly v11
 struct __启动窗口 : 窗口
 {
 	SciterDom dom;

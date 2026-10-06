@@ -1,2 +1,2 @@
-D:\Develop\白菜Win32UI\VS-IDE本体插件\BEModCollection\HTTP原始报服务.bec
-E03FA7B3A88474BAF79CE6BF7961407D
+D:\Develop\鐧借彍Win32UI\VS-IDE鏈綋鎻掍欢\BEModCollection\HTTP????????.bec
+D41D8CD98F00B204E9800998ECF8427E

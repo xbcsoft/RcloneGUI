@@ -5,7 +5,7 @@
 #pragma endregion
 
 #pragma region BEWin32UI
-//#version 0.1
+//#version 0.8
 #include <BEWin32UI/BEWin32UI.h>
 #ifndef _LIB
 #ifdef _DEBUG
@@ -40,20 +40,6 @@
 #endif
 #pragma endregion
 
-#pragma region SciterUI
-//#version 1.0
-#include <SciterUI/SciterUI.h>
-#ifndef _LIB
-#ifdef _DEBUG
-#ifdef _WIN64
-#pragma comment(lib,"SciterUI/x64/Debug/SciterUI.lib")
-#else
-#endif
-#else
-#endif
-#endif
-#pragma endregion
-
 #pragma region HTTPNative
 //#version 1.0
 #include "HTTPNative/HTTPNative.h"
@@ -69,8 +55,13 @@
 #include "系统服务注册/系统服务注册.h"
 #pragma endregion
 
-#pragma region 多线程
+#pragma region SciterUI
 //#version 1.0
-#include "多线程/多线程.h"
+#include <SciterUI/SciterUI.h>
+#pragma endregion
+
+#pragma region 多线程std
+//#version 1.0
+#include <多线程std/多线程std.h>
 #pragma endregion
 

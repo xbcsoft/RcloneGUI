@@ -18,9 +18,6 @@
     <Filter Include="资源文件">
       <UniqueIdentifier>{d69359df-ec44-47d4-930c-e0866618fb26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BEBuild\SciterUI">
-      <UniqueIdentifier>{e8cb1860-3b39-44ed-9f8b-a32a99d5949c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BEBuild\BEWebCodec">
       <UniqueIdentifier>{bf9ac41c-a87b-42d1-a9c4-ff573a6a7ecd}</UniqueIdentifier>
     </Filter>
@@ -29,6 +26,12 @@
     </Filter>
     <Filter Include="BEBuild\系统服务注册">
       <UniqueIdentifier>{ee2426e3-645a-4dff-b169-0b746ece74b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BEBuild\SciterUI">
+      <UniqueIdentifier>{12ac2e9c-f9dc-41f1-aa1f-45633802e8ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BEBuild\多线程std">
+      <UniqueIdentifier>{9046463a-5c28-4963-a050-820289034634}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +43,18 @@
     </ClCompile>
     <ClCompile Include="窗口\_启动窗口.cpp">
       <Filter>程序集</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\BEWebCodec\BEWebCodec.cpp">
+      <Filter>BEBuild\BEWebCodec</Filter>
+    </ClCompile>
+    <ClCompile Include="RcloneService.cpp">
+      <Filter>程序集</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BEModG)\coutlog\coutlog.cpp">
+      <Filter>BEBuild\coutlog</Filter>
+    </ClCompile>
+    <ClCompile Include="BEMod\系统服务注册\系统服务注册.cpp">
+      <Filter>BEBuild\系统服务注册</Filter>
     </ClCompile>
     <ClCompile Include="$(BEModG)\SciterUI\NTCps.cpp">
       <Filter>BEBuild\SciterUI</Filter>
@@ -56,20 +71,8 @@
     <ClCompile Include="$(BEModG)\SciterUI\SciterZip.cpp">
       <Filter>BEBuild\SciterUI</Filter>
     </ClCompile>
-    <ClCompile Include="$(BEModG)\BEWebCodec\BEWebCodec.cpp">
-      <Filter>BEBuild\BEWebCodec</Filter>
-    </ClCompile>
-    <ClCompile Include="RcloneService.cpp">
-      <Filter>程序集</Filter>
-    </ClCompile>
-    <ClCompile Include="$(BEModG)\coutlog\coutlog.cpp">
-      <Filter>BEBuild\coutlog</Filter>
-    </ClCompile>
-    <ClCompile Include="BEMod\系统服务注册\系统服务注册.cpp">
-      <Filter>BEBuild\系统服务注册</Filter>
-    </ClCompile>
-    <ClCompile Include="BEMod\多线程\多线程.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="$(BEModG)\多线程std\多线程std.cpp">
+      <Filter>BEBuild\多线程std</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

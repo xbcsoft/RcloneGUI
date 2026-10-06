@@ -7,6 +7,6 @@
 #endif
 
 namespace R{
-EXTBYTE htmZip[42777];
+EXTBYTE htmZip[43171];
 
 }
